@@ -239,8 +239,15 @@ func (c *Conn) QueryContext(ctx context.Context, query string, args []driver.Nam
 
 func (c *Conn) queryContext(ctx context.Context, query string, args []driver.Value) (driver.Rows, error) {
 	q := c.client.Query(query)
-	q.DefaultProjectID = c.cfg.ProjectID // allows omitting project in table reference
-	q.DefaultDatasetID = c.cfg.DatasetID // allows omitting dataset in table reference
+
+	q.DefaultProjectID = ""
+	q.DefaultDatasetID = ""
+
+	if c.cfg.DatasetID != "" {
+		q.DefaultProjectID = c.cfg.ProjectID // allows omitting project in table reference
+		q.DefaultDatasetID = c.cfg.DatasetID // allows omitting dataset in table reference
+	}
+
 	rowsIterator, err := q.Read(ctx)
 	if err != nil {
 		return nil, err
