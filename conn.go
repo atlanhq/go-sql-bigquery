@@ -180,7 +180,9 @@ func NewConn(ctx context.Context, cfg *Config) (c *Conn, err error) {
 	if err != nil {
 		return nil, err
 	}
-	c.ds = c.client.Dataset(c.cfg.DatasetID)
+	if c.cfg.DatasetID != "" {
+		c.ds = c.client.Dataset(c.cfg.DatasetID)
+	}
 
 	return
 }
